@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "overleaf.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "overleaf.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "overleaf.labels" . | nindent 6 }}
+      app.kubernetes.io/component: overleaf
+  template:
+    metadata:
+      labels:
+        {{- include "overleaf.labels" . | nindent 8 }}
+        app.kubernetes.io/component: overleaf
+    spec:
+      containers:
+        - name: overleaf
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: web
+              containerPort: {{ .Values.service.targetPort }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "overleaf.fullname" . }}-config
+          {{- if .Values.redis.auth.enabled }}
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "overleaf.fullname" . }}-redis
+                  key: redis-password
+            - name: OVERLEAF_REDIS_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "overleaf.fullname" . }}-redis
+                  key: redis-password
+          {{- end }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/overleaf
+      volumes:
+        - name: data
+          emptyDir: 
+            sizeLimit: 1Gi
+          

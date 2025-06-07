@@ -1,0 +1,16 @@
+apiVersion: v2
+name: overleaf
+description: Overleaf is a collaborative cloud-based LaTeX editor that allows users to write, edit, and publish scientific documents collaboratively in real-time.
+type: application
+version: 1.0.0
+appVersion: "5.5.0"
+# configuration references:
+#   - https://github.com/overleaf/overleaf/wiki/Configuring-Overleaf
+#   - https://github.com/overleaf/overleaf/wiki/Creating-and-managing-users
+dependencies:
+  - name: redis
+    version: 21.1.11
+    repository: https://charts.bitnami.com/bitnami
+  - name: mongodb
+    version: 16.5.14
+    repository: https://charts.bitnami.com/bitnami

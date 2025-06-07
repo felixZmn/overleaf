@@ -1,0 +1,40 @@
+redis:
+  architecture: "standalone"
+  auth:
+    enabled: true
+
+mongodb:
+  architecture: "replicaset"
+  replicaCount: 1
+  auth:
+    enabled: false
+
+replicaCount: 1
+image:
+  # Image with Overleaf CE and a full LaTeX installation
+  repository: tuetenk0pp/sharelatex-full
+  tag: 5.5.0
+  pullPolicy: IfNotPresent
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "512Mi"
+  limits:
+    cpu: "150m"
+    memory: "768Mi"
+
+ingress:
+  enabled: true
+  host: overleaf.0x2b.de
+  className: nginx
+  annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-production"
+  tls:
+    enabled: true
+    secretName: overleaf-tls
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 80
