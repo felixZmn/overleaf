@@ -2,8 +2,8 @@ name: Release Helm Chart
 
 on:
     push:
-        branches:
-            - main
+        #branches:
+        #  - main
         paths:
             - "Chart.yaml"
 
@@ -43,7 +43,7 @@ jobs:
 
             - name: Push chart to GHCR
               run: |
-                  helm push "${{ env.CHART_VERSION }}.tgz" oci://ghcr.io/felixzmn/helm
+                  helm push "overleaf-${{ env.CHART_VERSION }}.tgz" oci://ghcr.io/felixzmn/helm
 
             - name: Create git tag
               uses: actions/github-script@v5
@@ -52,6 +52,14 @@ jobs:
                       github.rest.git.createRef({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
-                        ref: 'refs/tags/' + env.CHART_VERSION,
+                        ref: 'refs/tags/${{ env.CHART_VERSION }}',
                         sha: context.sha
                       })
+
+            - name: Create release
+              uses: softprops/action-gh-release@da05d552573ad5aba039eaac05058a918a7bf631
+              with:
+                  tag_name: ${{ env.CHART_VERSION }}
+                  release_name: "Release ${{ env.CHART_VERSION }}"
+                  files: |
+                      overleaf-${{ env.CHART_VERSION }}.tgz

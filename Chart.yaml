@@ -2,7 +2,7 @@ apiVersion: v2
 name: overleaf
 description: Overleaf is a collaborative cloud-based LaTeX editor that allows users to write, edit, and publish scientific documents collaboratively in real-time.
 type: application
-version: 1.0.0
+version: 1.0.1
 appVersion: "5.5.0"
 # configuration references:
 #   - https://github.com/overleaf/overleaf/wiki/Configuring-Overleaf
