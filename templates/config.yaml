@@ -16,3 +16,6 @@ data:
   ENABLED_LINKED_FILE_TYPES: "project_file,project_output,project_output_log"
   SIBLING_CONTAINERS_ENABLED: "false"
   SERVER_PRO: "true"
+  {{- with .Values.overleafExtraConfig }}
+  {{ toYaml . | nindent 2 }}
+  {{- end }}
