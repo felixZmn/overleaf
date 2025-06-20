@@ -29,6 +29,7 @@ spec:
                 name: {{ include "overleaf.fullname" . }}-config
           {{- if .Values.redis.auth.enabled }}
           env:
+            {{- if .Values.redis.auth.enabled }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
@@ -39,7 +40,17 @@ spec:
                 secretKeyRef:
                   name: {{ include "overleaf.fullname" . }}-redis
                   key: redis-password
-          {{- end }}
+            {{- end }}
+            - name: OVERLEAF_EMAIL_SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "overleaf.fullname" . }}-smtp
+                  key: username
+            - name: OVERLEAF_EMAIL_SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "overleaf.fullname" . }}-smtp
+                  key: password
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
